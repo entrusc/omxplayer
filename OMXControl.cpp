@@ -162,50 +162,50 @@ OMXControlResult OMXControl::getEvent()
     dbus_respond_ok(m);
     return KeyConfig::ACTION_EXIT;
   }
-  else if (dbus_message_is_method_call(m, DBUS_INTERFACE_PROPERTIES, "CanQuit")
-      || dbus_message_is_method_call(m, DBUS_INTERFACE_PROPERTIES, "Fullscreen"))
+  else if (dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PROPERTIES, "CanQuit")
+      || dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PROPERTIES, "Fullscreen"))
   {
     dbus_respond_boolean(m, 1);
     return KeyConfig::ACTION_BLANK;
   }
-  else if (dbus_message_is_method_call(m, DBUS_INTERFACE_PROPERTIES, "CanSetFullscreen")
-      || dbus_message_is_method_call(m, DBUS_INTERFACE_PROPERTIES, "CanRaise")
-      || dbus_message_is_method_call(m, DBUS_INTERFACE_PROPERTIES, "HasTrackList"))
+  else if (dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PROPERTIES, "CanSetFullscreen")
+      || dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PROPERTIES, "CanRaise")
+      || dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PROPERTIES, "HasTrackList"))
   {
     dbus_respond_boolean(m, 0);
     return KeyConfig::ACTION_BLANK;
   }
-  else if (dbus_message_is_method_call(m, DBUS_INTERFACE_PROPERTIES, "Identity"))
+  else if (dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PROPERTIES, "Identity"))
   {
     dbus_respond_string(m, "OMXPlayer");
     return KeyConfig::ACTION_BLANK;
   }
-  else if (dbus_message_is_method_call(m, DBUS_INTERFACE_PROPERTIES, "SupportedUriSchemes"))
+  else if (dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PROPERTIES, "SupportedUriSchemes"))
   {
     const char *UriSchemes[] = {"file", "http"};
     dbus_respond_array(m, UriSchemes, 2); // Array is of length 2
     return KeyConfig::ACTION_BLANK;
   }
-  else if (dbus_message_is_method_call(m, DBUS_INTERFACE_PROPERTIES, "SupportedMimeTypes"))
+  else if (dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PROPERTIES, "SupportedMimeTypes"))
   {
     const char *MimeTypes[] = {}; // Needs supplying
     dbus_respond_array(m, MimeTypes, 0);
     return KeyConfig::ACTION_BLANK;
   }
-  else if (dbus_message_is_method_call(m, DBUS_INTERFACE_PROPERTIES, "CanGoNext")
-        || dbus_message_is_method_call(m, DBUS_INTERFACE_PROPERTIES, "CanGoPrevious"))
+  else if (dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PROPERTIES, "CanGoNext")
+        || dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PROPERTIES, "CanGoPrevious"))
   {
     dbus_respond_boolean(m, 0);
     return KeyConfig::ACTION_BLANK;
   }
-  else if (dbus_message_is_method_call(m, DBUS_INTERFACE_PROPERTIES, "CanSeek"))
+  else if (dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PROPERTIES, "CanSeek"))
   {
     dbus_respond_boolean(m, reader->CanSeek());
     return KeyConfig::ACTION_BLANK;
   }
-  else if (dbus_message_is_method_call(m, DBUS_INTERFACE_PROPERTIES, "CanControl")
-        || dbus_message_is_method_call(m, DBUS_INTERFACE_PROPERTIES, "CanPlay")
-        || dbus_message_is_method_call(m, DBUS_INTERFACE_PROPERTIES, "CanPause"))
+  else if (dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PROPERTIES, "CanControl")
+        || dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PROPERTIES, "CanPlay")
+        || dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PROPERTIES, "CanPause"))
   {
     dbus_respond_boolean(m, 1);
   }
@@ -275,7 +275,7 @@ OMXControlResult OMXControl::getEvent()
             return OMXControlResult(KeyConfig::ACTION_SEEK_ABSOLUTE, position);
       }
     }
-  else if (dbus_message_is_method_call(m, DBUS_INTERFACE_PROPERTIES, "PlaybackStatus"))
+  else if (dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PROPERTIES, "PlaybackStatus"))
   {
     const char *status;
     if (clock->OMXIsPaused())
@@ -290,7 +290,7 @@ OMXControlResult OMXControl::getEvent()
     dbus_respond_string(m, status);
     return KeyConfig::ACTION_BLANK;
   }
-  else if (dbus_message_is_method_call(m, DBUS_INTERFACE_PROPERTIES, "Volume"))
+  else if (dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PROPERTIES, "Volume"))
   {
     DBusError error;
     dbus_error_init(&error);
@@ -311,26 +311,26 @@ OMXControlResult OMXControl::getEvent()
       return KeyConfig::ACTION_BLANK;
     }
   }
-  else if (dbus_message_is_method_call(m, DBUS_INTERFACE_PROPERTIES, "Mute"))
+  else if (dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PROPERTIES, "Mute"))
   {
     audio->SetMute(true);
     dbus_respond_ok(m);
     return KeyConfig::ACTION_BLANK;
   }
-  else if (dbus_message_is_method_call(m, DBUS_INTERFACE_PROPERTIES, "Unmute"))
+  else if (dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PROPERTIES, "Unmute"))
   {
     audio->SetMute(false);
     dbus_respond_ok(m);
     return KeyConfig::ACTION_BLANK;
   }
-  else if (dbus_message_is_method_call(m, DBUS_INTERFACE_PROPERTIES, "Position"))
+  else if (dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PROPERTIES, "Position"))
   {
     // Returns the current position in microseconds
     int64_t pos = clock->OMXMediaTime();
     dbus_respond_int64(m, pos);
     return KeyConfig::ACTION_BLANK;
   }
-  else if (dbus_message_is_method_call(m, DBUS_INTERFACE_PROPERTIES, "Duration"))
+  else if (dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PROPERTIES, "Duration"))
   {
     // Returns the duration in microseconds
     int64_t dur = reader->GetStreamLength();
@@ -338,12 +338,12 @@ OMXControlResult OMXControl::getEvent()
     dbus_respond_int64(m, dur);
     return KeyConfig::ACTION_BLANK;
   }
-  else if (dbus_message_is_method_call(m, DBUS_INTERFACE_PROPERTIES, "MinimumRate"))
+  else if (dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PROPERTIES, "MinimumRate"))
   {
     dbus_respond_double(m, 0.0);
     return KeyConfig::ACTION_BLANK;
   }
-  else if (dbus_message_is_method_call(m, DBUS_INTERFACE_PROPERTIES, "MaximumRate"))
+  else if (dbus_message_is_method_call(m, OMXPLAYER_DBUS_INTERFACE_PROPERTIES, "MaximumRate"))
   {
     dbus_respond_double(m, 1.125);
     return KeyConfig::ACTION_BLANK;

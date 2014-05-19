@@ -98,7 +98,7 @@ float             m_font_size           = 0.055f;
 bool              m_centered            = false;
 bool              m_ghost_box           = true;
 unsigned int      m_subtitle_lines      = 3;
-bool              m_Pause               = false;
+bool              m_Pause               = true; //start in pause mode
 OMXReader         m_omx_reader;
 int               m_audio_index_use     = -1;
 bool              m_thread_player       = false;

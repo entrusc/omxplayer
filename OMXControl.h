@@ -1,6 +1,7 @@
 #define OMXPLAYER_DBUS_PATH_SERVER "/org/mpris/MediaPlayer2"  
 #define OMXPLAYER_DBUS_INTERFACE_ROOT "org.mpris.MediaPlayer2"
 #define OMXPLAYER_DBUS_INTERFACE_PLAYER "org.mpris.MediaPlayer2.Player"
+#define OMXPLAYER_DBUS_INTERFACE_PROPERTIES "org.mpris.MediaPlayer2.Properties"
 
 #include <dbus/dbus.h>
 #include "OMXClock.h"
