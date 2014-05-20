@@ -1,9 +1,15 @@
 OMXPlayer
 =========
 
+ATTENTION:
+THIS IS A SPECIAL VERSION (NOT THE OFFICIAL VERSION) OF OMXPLAYER. 
+MODDED TO START IN PAUSED MODE AND CHANGED SOME DBUS INTERFACE 
+SPECIFICATIONS. USE AT YOUR OWN RISK!
+
 OMXPlayer is a commandline OMX player for the Raspberry Pi. It was developed as
 a testbed for the XBMC Raspberry PI implementation and is quite handy to use
 standalone. 
+
 
 Downloading OMXPlayer
 ---------------------
@@ -448,8 +454,7 @@ Seeks to a specific location in the file.  This is an *absolute* seek.
 
    Params       |   Type            | Description
 :-------------: | ----------------- | ------------------------------------
- 1              | `string`          | Path (not currently used)
- 2              | `int64`           | Position to seek to, in microseconds
+ 1              | `int64`           | Position to seek to, in microseconds
  Return         | `null` or `int64` | If the supplied position is invalid, `null` is returned, otherwise the position (in microseconds) is returned
 
 
