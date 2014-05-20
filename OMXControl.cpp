@@ -258,7 +258,6 @@ OMXControlResult OMXControl::getEvent()
       dbus_error_init(&error);
 
       int64_t position;
-      const char *oPath; // ignoring path right now because we don't have a playlist
       dbus_message_get_args(m, &error, DBUS_TYPE_INT64, &position, DBUS_TYPE_INVALID);
 
       // Make sure a value is sent for setting position
