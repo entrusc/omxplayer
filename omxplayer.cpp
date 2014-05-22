@@ -124,6 +124,10 @@ float             m_display_aspect      = 0.0f;
 bool              m_boost_on_downmix    = true;
 bool              m_gen_log             = false;
 bool              m_loop                = false;
+double		  loop_offset		= 0.0;
+double		  last_packet_pts	= 0.0;
+double		  last_packet_dts	= 0.0;
+double		  last_packet_duration	= 0.0;
 int               m_layer               = 0;
 
 enum{ERROR=-1,SUCCESS,ONEBYTE};
@@ -1688,6 +1692,42 @@ int main(int argc, char *argv[])
     if(m_omx_pkt)
       m_send_eos = false;
 
+    if(m_loop)
+    {
+      if(m_omx_pkt)
+      {
+	if(m_omx_pkt->pts != DVD_NOPTS_VALUE)
+	{
+	  if(m_omx_pkt->pts < loop_offset)
+	    m_omx_pkt->pts += loop_offset;
+	  if(m_omx_pkt->pts > last_packet_pts)
+	    last_packet_pts = m_omx_pkt->pts;
+	}
+	if(m_omx_pkt->dts != DVD_NOPTS_VALUE)
+	{
+	  if(m_omx_pkt->dts < loop_offset)
+	    m_omx_pkt->dts += loop_offset;
+	  if(m_omx_pkt->dts > last_packet_dts)
+	    last_packet_dts = m_omx_pkt->dts;
+	}
+	last_packet_duration = m_omx_pkt->duration;
+      }
+      else if(m_omx_reader.IsEof())
+      {
+	if(m_omx_reader.SeekTime(m_loop_from, true, &startpts))
+	{
+	  m_omx_pkt = m_omx_reader.Read();
+	  if(m_omx_pkt)
+	  {
+	    if(last_packet_pts != DVD_NOPTS_VALUE)
+	      loop_offset = last_packet_pts + last_packet_duration;
+	    else if(last_packet_dts != DVD_NOPTS_VALUE)
+	      loop_offset = last_packet_dts + last_packet_duration;
+	  }
+	}
+      }
+    }
+
     if(m_omx_reader.IsEof() && !m_omx_pkt)
     {
       // demuxer EOF, but may have not played out data yet
@@ -1695,11 +1735,6 @@ int main(int argc, char *argv[])
            (m_has_audio && m_player_audio.GetCached()) )
       {
         OMXClock::OMXSleep(10);
-        continue;
-      }
-      if (m_loop)
-      {
-        m_incr = m_loop_from - (m_av_clock->OMXMediaTime() ? m_av_clock->OMXMediaTime() / DVD_TIME_BASE : last_seek_pos);
         continue;
       }
       if (!m_send_eos && m_has_video)
